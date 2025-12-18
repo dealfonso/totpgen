@@ -227,7 +227,22 @@ const app = Vue.createApp({
         cancelText: 'Cancel',
         onAccept: null,
         onCancel: null
-      }
+      },
+      // Export/Import data
+      showExportModal: false,
+      exportPassword: '',
+      exportPasswordConfirm: '',
+      exportError: '',
+      showImportPasswordModal: false,
+      importPassword: '',
+      importPasswordError: '',
+      importFileInfo: null,
+      importDataPending: null,
+      showImportConflictModal: false,
+      importConflictKey: {},
+      importConflictIndex: 0,
+      importKeysToProcess: [],
+      key_name: ''
     };
   },
 
@@ -709,6 +724,290 @@ const app = Vue.createApp({
 
       this.showCameraModal = false;
       this.cameraError = '';
+    },
+
+    // ============================================
+    // Export/Import methods
+    // ============================================
+    
+    showExportDialog: function () {
+      if (this.savedKeys.length === 0) {
+        this.showAlert('No keys to export. Please save some keys first.', 'Export Error', 'fa-exclamation-triangle');
+        return;
+      }
+      
+      this.showExportModal = true;
+      this.exportPassword = '';
+      this.exportPasswordConfirm = '';
+      this.exportError = '';
+    },
+
+    closeExportDialog: function () {
+      this.showExportModal = false;
+      this.exportPassword = '';
+      this.exportPasswordConfirm = '';
+      this.exportError = '';
+    },
+
+    exportKeys: async function () {
+      // Verify passwords match if password is not empty
+      if (this.exportPassword !== this.exportPasswordConfirm) {
+        this.exportError = 'Passwords do not match';
+        return;
+      }
+
+      // Warn if password is empty
+      if (this.exportPassword === '') {
+        const confirmExport = await new Promise((resolve) => {
+          this.showConfirm(
+            'You are about to export your keys without encryption. The file will contain your keys in plain text. Are you sure you want to continue?',
+            () => resolve(true),
+            () => resolve(false),
+            'Security Warning',
+            'Yes, export without encryption',
+            'Cancel'
+          );
+        });
+        
+        if (!confirmExport) {
+          return;
+        }
+      }
+
+      try {
+        // Load all saved keys
+        const keys = await loadKeys();
+        
+        // Get TOTPgen version (you may want to add a version constant)
+        const version = '1.0.0';
+        const exportDate = new Date().toISOString();
+        
+        // Create export object
+        const exportData = {
+          version: version,
+          exportDate: exportDate,
+          keysCount: keys.length,
+          encrypted: this.exportPassword !== '',
+          keys: null
+        };
+
+        // Encrypt or save in plain text
+        if (this.exportPassword === '') {
+          exportData.keys = keys;
+        } else {
+          exportData.keys = await encryptData(keys, this.exportPassword);
+        }
+
+        // Create blob and download
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `totpgen-export-${new Date().getTime()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        this.closeExportDialog();
+        this.showAlert(`Successfully exported ${keys.length} key(s)`, 'Export Successful', 'fa-check-circle');
+      } catch (error) {
+        this.exportError = 'Error exporting keys: ' + error.message;
+      }
+    },
+
+    handleImportFile: function (event) {
+      const file = event.target.files[0];
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importData = JSON.parse(e.target.result);
+          
+          // Validate import file structure
+          if (!importData.version || !importData.exportDate || importData.keysCount === undefined || !importData.hasOwnProperty('keys')) {
+            this.showAlert('Invalid import file format. Please select a valid TOTPgen export file.', 'Import Error', 'fa-exclamation-circle');
+            this.$refs.importFileInput.value = '';
+            return;
+          }
+
+          // Store file info
+          this.importFileInfo = {
+            version: importData.version,
+            exportDate: importData.exportDate,
+            keysCount: importData.keysCount
+          };
+
+          // Check if encrypted
+          if (importData.encrypted) {
+            // Show password modal
+            this.importDataPending = importData;
+            this.showImportPasswordModal = true;
+            this.importPassword = '';
+            this.importPasswordError = '';
+          } else {
+            // Process unencrypted import
+            this.processImportKeys(importData.keys);
+          }
+        } catch (error) {
+          this.showAlert('Error reading import file: ' + error.message, 'Import Error', 'fa-exclamation-circle');
+        }
+        
+        // Clear file input
+        this.$refs.importFileInput.value = '';
+      };
+      reader.readAsText(file);
+    },
+
+    closeImportPasswordDialog: function () {
+      this.showImportPasswordModal = false;
+      this.importPassword = '';
+      this.importPasswordError = '';
+      this.importDataPending = null;
+      this.importFileInfo = null;
+    },
+
+    processImportWithPassword: async function () {
+      if (!this.importDataPending) {
+        return;
+      }
+
+      try {
+        // Decrypt the keys
+        const keys = await decryptData(this.importDataPending.keys, this.importPassword);
+        
+        // Close password modal
+        this.closeImportPasswordDialog();
+        
+        // Process the keys
+        this.processImportKeys(keys);
+      } catch (error) {
+        this.importPasswordError = 'Incorrect password or corrupted data';
+      }
+    },
+
+    processImportKeys: async function (importedKeys) {
+      if (!Array.isArray(importedKeys) || importedKeys.length === 0) {
+        this.showAlert('No valid keys found in the import file.', 'Import Error', 'fa-exclamation-triangle');
+        return;
+      }
+
+      try {
+        // Load current keys
+        const currentKeys = await loadKeys();
+        
+        // Prepare keys to process
+        this.importKeysToProcess = importedKeys.map(key => ({
+          ...key,
+          importDate: new Date().toISOString()
+        }));
+        this.importConflictIndex = 0;
+        
+        // Start processing
+        this.processNextImportKey(currentKeys);
+      } catch (error) {
+        this.showAlert('Error processing import: ' + error.message, 'Import Error', 'fa-exclamation-circle');
+      }
+    },
+
+    processNextImportKey: async function (currentKeys) {
+      if (this.importConflictIndex >= this.importKeysToProcess.length) {
+        // All keys processed
+        try {
+          await saveKeys(currentKeys);
+          await this.loadKeys();
+          this.showAlert(`Successfully imported ${this.importKeysToProcess.length} key(s)`, 'Import Successful', 'fa-check-circle');
+          this.importKeysToProcess = [];
+        } catch (error) {
+          this.showAlert('Error saving imported keys: ' + error.message, 'Import Error', 'fa-exclamation-circle');
+        }
+        return;
+      }
+
+      const keyToImport = this.importKeysToProcess[this.importConflictIndex];
+      
+      // Check if key name exists
+      const existingIndex = currentKeys.findIndex(k => k.name === keyToImport.name);
+      
+      if (existingIndex !== -1) {
+        // Conflict detected
+        this.importConflictKey = keyToImport;
+        this.showImportConflictModal = true;
+        
+        // Wait for user decision (handled by conflict resolution methods)
+      } else {
+        // No conflict, add the key
+        currentKeys.push(keyToImport);
+        this.importConflictIndex++;
+        this.processNextImportKey(currentKeys);
+      }
+    },
+
+    overwriteImportKey: async function () {
+      try {
+        const currentKeys = await loadKeys();
+        const keyToImport = this.importConflictKey;
+        
+        // Find and replace the existing key
+        const existingIndex = currentKeys.findIndex(k => k.name === keyToImport.name);
+        if (existingIndex !== -1) {
+          currentKeys[existingIndex] = keyToImport;
+        }
+        
+        this.showImportConflictModal = false;
+        this.importConflictIndex++;
+        this.processNextImportKey(currentKeys);
+      } catch (error) {
+        this.showAlert('Error overwriting key: ' + error.message, 'Import Error', 'fa-exclamation-circle');
+      }
+    },
+
+    renameImportKey: async function () {
+      try {
+        const currentKeys = await loadKeys();
+        const keyToImport = { ...this.importConflictKey };
+        
+        // Generate alternative name using export and import dates
+        const exportDate = new Date(keyToImport.importDate || Date.now()).toISOString().slice(0, 10);
+        const importDate = new Date().toISOString().slice(0, 10);
+        let newName = `${keyToImport.name} (imported ${importDate})`;
+        
+        // Ensure the name is unique
+        let counter = 1;
+        while (currentKeys.some(k => k.name === newName)) {
+          newName = `${keyToImport.name} (imported ${importDate} #${counter})`;
+          counter++;
+        }
+        
+        keyToImport.name = newName;
+        currentKeys.push(keyToImport);
+        
+        this.showImportConflictModal = false;
+        this.importConflictIndex++;
+        this.processNextImportKey(currentKeys);
+      } catch (error) {
+        this.showAlert('Error renaming key: ' + error.message, 'Import Error', 'fa-exclamation-circle');
+      }
+    },
+
+    skipImportKey: async function () {
+      try {
+        const currentKeys = await loadKeys();
+        this.showImportConflictModal = false;
+        this.importConflictIndex++;
+        this.processNextImportKey(currentKeys);
+      } catch (error) {
+        this.showAlert('Error skipping key: ' + error.message, 'Import Error', 'fa-exclamation-circle');
+      }
+    },
+
+    cancelImportConflict: function () {
+      this.showImportConflictModal = false;
+      this.importKeysToProcess = [];
+      this.importConflictIndex = 0;
     }
   }
 });

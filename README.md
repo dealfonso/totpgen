@@ -62,7 +62,20 @@ No need to manually type long secret keys - just scan and go!
 
 ![Scanning a QR code with the camera](web/img/screenshot-qr-scan.jpeg)
 
-### 💾 Save Multiple Keys
+### � Export & Import Keys
+**Use the same configuration across multiple devices!** TOTPgen allows you to export and import your entire key collection:
+
+- **Encrypted Export**: Export all your keys to a secure, encrypted JSON file
+- **Password Protection**: Protect your export with a separate password (independent from your master password)
+- **Cross-Device Sync**: Transfer your keys between devices securely
+- **Backup & Recovery**: Create encrypted backups of your authentication keys
+- **Optional Encryption**: Choose to export without encryption for convenience (with clear warnings)
+
+The export file includes version information, export date, and key count for easy management. When importing, you have full control over duplicate keys - choose to overwrite, rename, or skip each conflicting key individually.
+
+**Perfect for**: Setting up TOTPgen on a new device, creating encrypted backups, or maintaining the same keys across your desktop and mobile devices while keeping everything secure and private.
+
+### �💾 Save Multiple Keys
 Store and manage multiple TOTP keys for different services. Each key can have a custom name for easy identification.
 
 ![Managing multiple saved TOTP keys](web/img/screenshot-saved-keys.png)
@@ -169,6 +182,39 @@ Your encrypted keys are stored only in your browser's local storage:
 - **Load a saved key**: Click on its name in the saved keys list
 - **Delete a key**: Click the ❌ button next to the key name
 - **Clear all data**: Click the trash icon (⚠️ Warning: This cannot be undone!)
+
+### Exporting and Importing Keys
+
+TOTPgen makes it easy to transfer your keys between devices or create secure backups:
+
+#### Exporting Keys
+
+1. Click the **export icon** (📤) in the toolbar
+2. Enter a password to encrypt the export file (recommended)
+   - You can leave it empty for an unencrypted export (not recommended)
+   - This password is independent from your master password
+3. Confirm the password
+4. Click **Export** to download the JSON file
+5. The file will be named `totpgen-export-[timestamp].json`
+
+**Security Note**: The exported file contains:
+- Version information and export date
+- Number of keys included
+- Your keys encrypted with AES-256-GCM (if password provided)
+- All key configurations (digits, period, algorithm)
+
+#### Importing Keys
+
+1. Click the **import icon** (📥) in the toolbar
+2. Select your previously exported JSON file
+3. If the file is encrypted, enter the export password
+4. Review and resolve any duplicate key names:
+   - **Overwrite**: Replace the existing key with the imported one
+   - **Rename**: Keep both keys with an automatically generated unique name
+   - **Skip**: Don't import this particular key
+5. All imported keys are automatically encrypted with your current master password
+
+**Cross-Device Usage**: Export your keys from one device and import them on another to maintain the same TOTP configuration across all your devices. The encryption ensures your keys remain secure during transfer.
 
 ### Installing as a Progressive Web App (PWA)
 

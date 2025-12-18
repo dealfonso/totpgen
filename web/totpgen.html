@@ -184,6 +184,12 @@
         <button class="button is-info ml-1 is-round-button" @click="openCamera" title="Scan QR Code with Camera">
           <i class="fa fa-camera"></i>
         </button>
+        <button class="button is-info ml-1 is-round-button" @click="showExportDialog" title="Export Keys">
+          <i class="fa fa-cloud-arrow-down"></i>
+        </button>
+        <button class="button is-info ml-1 is-round-button" @click="$refs.importFileInput.click()" title="Import Keys">
+          <i class="fa fa-cloud-arrow-up"></i>
+        </button>
         <div class="is-flex-grow-1"></div>
         <button class="button is-info ml-1 is-round-button is-danger" @click="clearAllConfiguration" title="Clear all configuration and saved keys">
           <i class="fa fa-trash "></i>
@@ -235,6 +241,9 @@
       <!-- Hidden file input for QR image upload -->
       <input class="is-hidden" type="file" accept="image/*" @change="handleQRImageUpload" ref="qrFileInput">
 
+      <!-- Hidden file input for importing keys -->
+      <input class="is-hidden" type="file" accept=".json,application/json" @change="handleImportFile" ref="importFileInput">
+
       <!-- Modal for camera QR scanner -->
       <div class="modal" :class="{ 'is-active': showCameraModal }">
         <div class="modal-background" @click="closeCameraModal"></div>
@@ -270,6 +279,130 @@
         <label class="label is-uppercase">Token Validity (in seconds)</label>
         <div class="control">
           <input class="input" type="text" v-model="period" placeholder="The most common value is 30">
+        </div>
+      </div>
+
+      <!-- Export Modal -->
+      <div class="modal" :class="{ 'is-active': showExportModal }">
+        <div class="modal-background" @click="closeExportDialog"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Export Keys</p>
+            <button class="delete" aria-label="close" @click="closeExportDialog"></button>
+          </header>
+          <section class="modal-card-body">
+            <div v-if="exportError" class="notification is-danger">
+              {{ exportError }}
+            </div>
+            <div class="content">
+              <p>Export all your saved keys to a JSON file. You can optionally protect the export with a password.</p>
+            </div>
+            <div class="field">
+              <label class="label">Export Password (optional)</label>
+              <div class="control">
+                <input 
+                  class="input" 
+                  type="password" 
+                  v-model="exportPassword" 
+                  placeholder="Enter password to encrypt the export">
+              </div>
+              <p class="help">Leave empty to export without encryption</p>
+              <p class="help is-danger" v-if="exportPassword === ''">
+                <i class="fa fa-exclamation-triangle"></i> Warning: Without a password, your keys will be exported in plain text!
+              </p>
+            </div>
+            <div class="field">
+              <label class="label">Confirm Password</label>
+              <div class="control">
+                <input 
+                  class="input" 
+                  type="password" 
+                  v-model="exportPasswordConfirm" 
+                  @keyup.enter="exportKeys"
+                  placeholder="Confirm the password">
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary" @click="exportKeys">
+              <span class="icon"><i class="fa fa-cloud-arrow-down"></i></span>
+              <span>Export</span>
+            </button>
+            <button class="button ml-1" @click="closeExportDialog">Cancel</button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Import Conflict Modal -->
+      <div class="modal" :class="{ 'is-active': showImportConflictModal }">
+        <div class="modal-background" @click="cancelImportConflict"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">
+              <i class="fa fa-exclamation-triangle"></i> Duplicate Key Name
+            </p>
+            <button class="delete" aria-label="close" @click="cancelImportConflict"></button>
+          </header>
+          <section class="modal-card-body">
+            <p>A key with the name <strong>"{{ importConflictKey.name }}"</strong> already exists.</p>
+            <p class="mt-3">What would you like to do?</p>
+          </section>
+          <footer class="modal-card-foot is-justify-content-center">
+            <button class="button is-warning" @click="overwriteImportKey">
+              <span class="icon"><i class="fa fa-save"></i></span>
+              <span>Overwrite</span>
+            </button>
+            <button class="button is-info ml-1" @click="renameImportKey">
+              <span class="icon"><i class="fa fa-edit"></i></span>
+              <span>Rename</span>
+            </button>
+            <button class="button ml-1" @click="skipImportKey">Skip</button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Import Password Modal -->
+      <div class="modal" :class="{ 'is-active': showImportPasswordModal }">
+        <div class="modal-background" @click="closeImportPasswordDialog"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Import Password Required</p>
+            <button class="delete" aria-label="close" @click="closeImportPasswordDialog"></button>
+          </header>
+          <section class="modal-card-body">
+            <div v-if="importPasswordError" class="notification is-danger">
+              {{ importPasswordError }}
+            </div>
+            <div class="content">
+              <p>This export file is encrypted. Please enter the password used during export.</p>
+              <div v-if="importFileInfo">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Version:</strong> {{ importFileInfo.version }}<br>
+                  <strong>Export Date:</strong> {{ new Date(importFileInfo.exportDate).toLocaleString() }}<br>
+                  <strong>Number of Keys:</strong> {{ importFileInfo.keysCount }}
+                </p>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Password</label>
+              <div class="control">
+                <input 
+                  class="input" 
+                  type="password" 
+                  v-model="importPassword" 
+                  @keyup.enter="processImportWithPassword"
+                  placeholder="Enter the export password"
+                  autofocus>
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary" @click="processImportWithPassword">
+              <span class="icon"><i class="fa fa-unlock"></i></span>
+              <span>Decrypt and Import</span>
+            </button>
+            <button class="button ml-1" @click="closeImportPasswordDialog">Cancel</button>
+          </footer>
         </div>
       </div>
 

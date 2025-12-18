@@ -109,6 +109,13 @@
             <strong>TOTPgen</strong> provides a modern, web-based alternative that works anywhere, requires no installation, 
             and keeps your data completely private with client-side encryption.
           </p>
+          <div class="notification is-success is-light mt-4">
+            <p class="has-text-left">
+              <strong><i class="fas fa-sync-alt"></i> New: Cross-Device Support!</strong><br>
+              Export your encrypted keys from one device and import them on another. 
+              Keep your authentication synchronized across all your devices while maintaining complete security and privacy.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -199,12 +206,98 @@
           <div class="card feature-card">
             <div class="card-content">
               <div class="feature-icon">
+                <i class="fas fa-file-export"></i>
+              </div>
+              <h3 class="title is-4 has-text-centered">Export & Import</h3>
+              <p class="has-text-centered">
+                Export your keys to encrypted backup files and import them on other devices. Use the same configuration across all your devices securely.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="column is-4 p-0">
+        </div>
+        <div class="column is-4">
+          <div class="card feature-card">
+            <div class="card-content">
+              <div class="feature-icon">
                 <i class="fas fa-code"></i>
               </div>
               <h3 class="title is-4 has-text-centered">Open Source</h3>
               <p class="has-text-centered">
                 Fully open source and transparent. Review the code, contribute improvements, or host it yourself. Total control and trust.
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Export/Import Section -->
+  <section class="section" style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);">
+    <div class="container">
+      <div class="has-text-centered mb-6">
+        <h2 class="section-title">
+          <i class="fas fa-sync-alt" style="color: #667eea;"></i> Cross-Device Synchronization
+        </h2>
+        <p class="section-subtitle">
+          Use the same TOTP keys across all your devices with encrypted export and import
+        </p>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-10">
+          <div class="box" style="background: white; border-left: 4px solid #667eea;">
+            <div class="columns is-vcentered">
+              <div class="column is-7">
+                <h3 class="title is-4">
+                  <i class="fas fa-file-export" style="color: #667eea;"></i> Secure Export & Import
+                </h3>
+                <div class="content">
+                  <p class="is-size-5 mb-4">
+                    <strong>Transfer your keys between devices safely and easily.</strong>
+                  </p>
+                  <ul class="is-size-6">
+                    <li><strong>🔐 Encrypted Backups:</strong> Export all your keys to an encrypted JSON file protected with AES-256-GCM encryption</li>
+                    <li><strong>🔑 Password Protected:</strong> Use a separate export password to secure your backup file (independent from your master password)</li>
+                    <li><strong>📱 Cross-Device:</strong> Export from your desktop and import on your mobile device, or vice versa</li>
+                    <li><strong>💾 Smart Import:</strong> Automatically handles duplicate keys - choose to overwrite, rename, or skip</li>
+                    <li><strong>📋 Full Backup:</strong> Export includes version info, timestamp, and all key configurations</li>
+                  </ul>
+                  <div class="notification is-info is-light mt-4">
+                    <p class="is-size-7">
+                      <strong><i class="fas fa-info-circle"></i> Perfect for:</strong> Setting up TOTPgen on multiple devices, creating secure backups, 
+                      or switching between desktop and mobile while keeping all your authentication keys synchronized.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-5 has-text-centered">
+                <div class="box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 3rem 2rem;">
+                  <div style="font-size: 4rem; color: white; margin-bottom: 1rem;">
+                    <i class="fas fa-laptop"></i>
+                    <i class="fas fa-arrow-right-arrow-left" style="font-size: 2rem; margin: 0 1rem;"></i>
+                    <i class="fas fa-mobile-alt"></i>
+                  </div>
+                  <p class="has-text-white has-text-weight-bold is-size-5">
+                    Same Keys, All Devices
+                  </p>
+                  <p class="has-text-white-ter is-size-7 mt-2">
+                    Your authentication, everywhere
+                  </p>
+                </div>
+                <div class="buttons is-centered mt-4">
+                  <button class="button is-medium" style="background: #667eea; color: white;" disabled>
+                    <span class="icon"><i class="fas fa-file-export"></i></span>
+                    <span>Export Keys</span>
+                  </button>
+                  <button class="button is-medium" style="background: #764ba2; color: white;" disabled>
+                    <span class="icon"><i class="fas fa-file-import"></i></span>
+                    <span>Import Keys</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
