@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOTPgen - Secure TOTP Token Generator</title>
+  <meta name="description" content="A modern, secure, and easy-to-use TOTP token generator that works in your browser. No installation required. Your data stays encrypted and private.">
+  
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Favicon -->
+  <link rel="icon" href="/img/icons/favicon.ico" type="image/x-icon">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero is-fullheight-with-navbar">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <div class="columns is-vcentered">
+          <div class="column">
+            <img src="img/totpgen-hr-transparent.png" alt="TOTPgen logo" class="hero-logo" loading="lazy"
+              onerror='this.outerHTML = "<h1 class=\"hero-title\"><i class=\"fas fa-shield-halved\"></i> TOTPgen</h1>"'>
+            <p class="hero-subtitle">
+              Your secure, browser-based TOTP token generator. No installation required. Complete privacy guaranteed.
+            </p>
+            <div class="buttons is-centered">
+              <a href="totpgen.html" class="button is-success is-large cta-button">
+                <span class="icon">
+                  <i class="fas fa-rocket"></i>
+                </span>
+                <span>Launch TOTPgen</span>
+              </a>
+              <a href="#features" class="button is-light is-large">
+                <span>Learn More</span>
+                <span class="icon">
+                  <i class="fas fa-arrow-down"></i>
+                </span>
+              </a>
+            </div>
+            <!-- Main interface screenshot -->
+            <div class="mt-6">
+              <img src="img/screenshot-main-interface.png" alt="TOTPgen main interface" class="screenshot">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why TOTPgen Section -->
+  <section class="section why-section" id="why">
+    <div class="container">
+      <div class="has-text-centered mb-6">
+        <h2 class="section-title">Why TOTPgen?</h2>
+        <p class="section-subtitle">
+          Traditional authenticator apps require installation and are often limited to mobile devices. 
+          TOTPgen brings two-factor authentication to your desktop with complete privacy and ease of use.
+        </p>
+      </div>
+
+      <div class="columns is-multiline is-centered">
+        <div class="column is-4">
+          <div class="stats-card">
+            <div class="stats-number">
+              <i class="fas fa-desktop"></i>
+            </div>
+            <div class="stats-label">Works on Desktop & Mobile</div>
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="stats-card">
+            <div class="stats-number">
+              <i class="fas fa-lock"></i>
+            </div>
+            <div class="stats-label">100% Private & Encrypted</div>
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="stats-card">
+            <div class="stats-number">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div class="stats-label">Zero Installation</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content has-text-centered mt-6">
+        <div class="box" style="max-width: 800px; margin: 0 auto; background: white;">
+          <h3 class="title is-4">The Problem</h3>
+          <p class="mb-4">
+            Google Authenticator and Microsoft Authenticator are excellent apps, but they have limitations:
+          </p>
+          <ul class="has-text-left" style="max-width: 600px; margin: 0 auto;">
+            <li><strong>Mobile-only:</strong> Not ideal for desktop workflows</li>
+            <li><strong>Installation required:</strong> Needs device setup and permissions</li>
+            <li><strong>Sync concerns:</strong> Cloud sync raises privacy questions</li>
+            <li><strong>Device dependency:</strong> Lose your phone, lose access</li>
+          </ul>
+          
+          <h3 class="title is-4 mt-5">The Solution</h3>
+          <p>
+            <strong>TOTPgen</strong> provides a modern, web-based alternative that works anywhere, requires no installation, 
+            and keeps your data completely private with client-side encryption.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="has-text-centered mb-6">
+        <h2 class="section-title">Features</h2>
+        <p class="section-subtitle">
+          Everything you need for secure two-factor authentication, right in your browser.
+        </p>
+      </div>
+
+      <div class="columns is-multiline">
+        <div class="column is-4">
+          <div class="card feature-card">
+            <div class="card-content">
+              <div class="feature-icon">
+                <i class="fas fa-globe"></i>
+              </div>
+              <h3 class="title is-4 has-text-centered">Works Everywhere</h3>
+              <p class="has-text-centered">
+                Use TOTPgen on any device with a modern web browser. Desktop, laptop, tablet, or mobile - it works seamlessly everywhere.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-4">
+          <div class="card feature-card">
+            <div class="card-content">
+              <div class="feature-icon">
+                <i class="fas fa-download"></i>
+              </div>
+              <h3 class="title is-4 has-text-centered">No Installation</h3>
+              <p class="has-text-centered">
+                Just open the web app and start using it. No downloads, no app store, no permissions, no hassle. It's that simple.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-4">
+          <div class="card feature-card">
+            <div class="card-content">
+              <div class="feature-icon">
+                <i class="fas fa-shield-halved"></i>
+              </div>
+              <h3 class="title is-4 has-text-centered">Complete Privacy</h3>
+              <p class="has-text-centered">
+                Your data never leaves your browser. All encryption and decryption happens locally. We can't access your keys because we never see them.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-4">
+          <div class="card feature-card">
+            <div class="card-content">
+              <div class="feature-icon">
+                <i class="fas fa-key"></i>
+              </div>
+              <h3 class="title is-4 has-text-centered">Encrypted Storage</h3>
+              <p class="has-text-centered">
+                All your TOTP keys are encrypted with AES-256-GCM using a password only you know. Not even stored in plain text in your browser.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-4">
+          <div class="card feature-card">
+            <div class="card-content">
+              <div class="feature-icon">
+                <i class="fas fa-qrcode"></i>
+              </div>
+              <h3 class="title is-4 has-text-centered">QR Code Import</h3>
+              <p class="has-text-centered">
+                Import TOTP keys easily by scanning QR codes with your camera or uploading an image. Quick setup, no manual typing.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-4">
+          <div class="card feature-card">
+            <div class="card-content">
+              <div class="feature-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <h3 class="title is-4 has-text-centered">Open Source</h3>
+              <p class="has-text-centered">
+                Fully open source and transparent. Review the code, contribute improvements, or host it yourself. Total control and trust.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section" style="background: #f9f9f9;">
+    <div class="container">
+      <div class="has-text-centered mb-6">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">
+          Get started with TOTPgen in three simple steps.
+        </p>
+      </div>
+
+      <div class="columns is-vcentered">
+        <div class="column is-8 is-offset-2">
+          <div class="box">
+            <div class="content">
+              <div class="media mb-5">
+                <div class="media-left">
+                  <div class="feature-icon small">
+                    <span>1</span>
+                  </div>
+                </div>
+                <div class="media-content">
+                  <h3 class="title is-4">Set Your Master Password</h3>
+                  <p>
+                    Create a master password to encrypt your TOTP keys. This password never leaves your device and is never stored anywhere.
+                    You can also choose to leave it empty for convenience (though encryption is recommended).
+                  </p>
+                </div>
+              </div>
+
+              <div class="media mb-5">
+                <div class="media-left">
+                  <div class="feature-icon small">
+                    <span>2</span>
+                  </div>
+                </div>
+                <div class="media-content">
+                  <h3 class="title is-4">Import Your Keys</h3>
+                  <p>
+                    Add your TOTP keys by scanning QR codes with your camera, uploading QR images, or entering the secret key manually.
+                    All keys are encrypted and saved in your browser's local storage.
+                  </p>
+                </div>
+              </div>
+
+              <div class="media">
+                <div class="media-left">
+                  <div class="feature-icon small">
+                    <span>3</span>
+                  </div>
+                </div>
+                <div class="media-content">
+                  <h3 class="title is-4">Generate Tokens</h3>
+                  <p>
+                    Your TOTP tokens are generated automatically and refresh every 30 seconds. 
+                    Copy them with one click and use them for two-factor authentication on any service.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Password Screenshot -->
+      <div class="columns is-centered mt-6">
+        <div class="column is-8 has-text-centered">
+          <div class="box">
+            <h3 class="title is-4 mb-4">Change Your Master Password Anytime</h3>
+            <p class="mb-4" style="color: #7a7a7a;">
+              Need to update your security? Change your master password with ease, and all your keys will be automatically re-encrypted.
+            </p>
+            <img src="img/screenshot-change-password.png" alt="Changing master password" class="screenshot">
+          </div>
+        </div>
+      </div>      
+    </div>
+  </section>
+
+  <!-- Technology Section -->
+  <section class="section">
+    <div class="container">
+      <div class="has-text-centered mb-6">
+        <h2 class="section-title">Built With Modern Technology</h2>
+        <p class="section-subtitle">
+          TOTPgen uses industry-standard encryption and modern web technologies to ensure security and reliability.
+        </p>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="box has-text-centered">
+            <h3 class="title is-4 mb-4">Security & Technology Stack</h3>
+            <div class="mb-4">
+              <span class="tech-badge"><i class="fas fa-lock"></i> AES-256-GCM Encryption</span>
+              <span class="tech-badge"><i class="fas fa-key"></i> PBKDF2 Key Derivation</span>
+              <span class="tech-badge"><i class="fas fa-shield"></i> Web Crypto API</span>
+            </div>
+            <div class="mb-4">
+              <span class="tech-badge"><i class="fab fa-js"></i> Vue.js 3</span>
+              <span class="tech-badge"><i class="fas fa-qrcode"></i> jsQR</span>
+              <span class="tech-badge"><i class="fas fa-mobile"></i> OTPAuth</span>
+            </div>
+            <div>
+              <span class="tech-badge"><i class="fas fa-code"></i> 100% Client-Side</span>
+              <span class="tech-badge"><i class="fas fa-database"></i> Local Storage Only</span>
+              <span class="tech-badge"><i class="fas fa-server"></i> No Backend Required</span>
+            </div>
+            
+            <div class="content mt-5">
+              <p>
+                <strong>Security First:</strong> Your TOTP keys are encrypted using AES-256-GCM with 100,000 PBKDF2 iterations.
+                This is the same level of encryption used by enterprise password managers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section cta-section">
+    <div class="container has-text-centered">
+      <h2 class="title is-2" style="color: white; margin-bottom: 1rem;">
+        Ready to Secure Your Accounts?
+      </h2>
+      <p class="subtitle is-4" style="color: rgba(255,255,255,0.9); margin-bottom: 2rem;">
+        Start using TOTPgen today. No signup, no credit card, no installation required.
+      </p>
+      <a href="totpgen.html" class="button is-success is-large cta-button">
+        <span class="icon">
+          <i class="fas fa-rocket"></i>
+        </span>
+        <span>Launch TOTPgen</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="columns">
+        <div class="column is-6">
+          <h3 class="title is-4" style="color: white;">
+            <img src="img/totpgen-web.png" alt="TOTPgen Logo" style="max-width: 50px; vertical-align: middle;"> TOTPgen
+          </h3>
+          <p style="color: rgba(255,255,255,0.8);">
+            A secure, privacy-focused TOTP token generator that works entirely in your browser. 
+            Your keys, your device, your control.
+          </p>
+          <div class="mt-4">
+            <a href="https://github.com/dealfonso/totpgen" class="button is-light is-outlined" target="_blank" rel="noopener">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>View on GitHub</span>
+            </a>
+          </div>
+        </div>
+        <div class="column is-3">
+          <h4 class="title is-5" style="color: white;">Quick Links</h4>
+          <ul style="list-style: none; padding: 0;">
+            <li><a href="#why" style="color: rgba(255,255,255,0.8);">Why TOTPgen?</a></li>
+            <li><a href="#features" style="color: rgba(255,255,255,0.8);">Features</a></li>
+            <li><a href="totpgen.html" style="color: rgba(255,255,255,0.8);">Launch App</a></li>
+            <li><a href="https://github.com/dealfonso/totpgen" style="color: rgba(255,255,255,0.8);" target="_blank" rel="noopener">GitHub</a></li>
+          </ul>
+        </div>
+        <div class="column is-3">
+          <h4 class="title is-5" style="color: white;">About</h4>
+          <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">
+            Created with ❤️ <a href="https://github.com/dealfonso" style="color: white;" target="_blank" rel="noopener">Carlos A.</a>
+          </p>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 1rem;">
+            Open source and free to use. Licensed under GPL-3.0.
+          </p>
+        </div>
+      </div>
+      <hr style="background: rgba(255,255,255,0.2); margin: 2rem 0;">
+      <div class="has-text-centered" style="color: rgba(255,255,255,0.6);">
+        <p>© 2025 TOTPgen. All rights reserved. No data collection, no tracking, no cookies.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Smooth scroll script -->
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

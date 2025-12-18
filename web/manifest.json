@@ -1,0 +1,28 @@
+{
+"name": "TOTPgen - Secure TOTP Token Generator",
+"short_name": "TOTPgen",
+"start_url": "/app.html",
+"display": "standalone",
+"description": "A secure, browser-based TOTP token generator that ensures your data stays private and encrypted.",
+"lang": "en",
+"dir": "auto",
+"theme_color": "#000000",
+"background_color": "#000000",
+"orientation": "any",
+"icons": [
+    {
+        "src": "/img/icons/totpgen-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable"
+    },
+    {
+        "src": "/img/icons/totpgen-192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any"
+    }
+],
+"prefer_related_applications": false,
+"related_applications": []
+}
