@@ -1,7 +1,7 @@
 {
 "name": "TOTPgen - Secure TOTP Token Generator",
 "short_name": "TOTPgen",
-"start_url": "/app.html",
+"start_url": "/totpgen.html",
 "display": "standalone",
 "description": "A secure, browser-based TOTP token generator that ensures your data stays private and encrypted.",
 "lang": "en",
